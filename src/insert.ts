@@ -1,5 +1,6 @@
 import weaviate from "weaviate-ts-client";
 import dotenv from "dotenv";
+import productsData from "./products_data_formated.json";
 
 dotenv.config();
 async function main() {
@@ -9,29 +10,18 @@ async function main() {
     headers: { "X-OpenAI-Api-Key": process.env.OPENAI_APIKEY! },
   });
 
-  // Get the data from the data.json file
-  const data = await getJsonData();
-
   // Prepare a batcher
   let batcher = client.batch.objectsBatcher();
   let counter: number = 0;
   let batchSize: number = 100;
+  let inserted = 0;
+  let errors = 0;
 
-  interface Question {
-    Answer: string;
-    Question: string;
-    Category: string;
-  }
-
-  data.forEach((question: Question) => {
+  productsData.forEach((properties) => {
     // Construct an object with a class and properties 'answer' and 'question'
     const obj = {
-      class: "Question",
-      properties: {
-        answer: question.Answer,
-        question: question.Question,
-        category: question.Category,
-      },
+      class: "Product",
+      properties,
     };
 
     // add the object to the batch queue
@@ -42,11 +32,11 @@ async function main() {
       // flush the batch queue
       batcher
         .do()
-        .then((res: any) => {
-          console.log(res);
+        .then(() => {
+          inserted += 1;
         })
         .catch((err: Error) => {
-          console.error(err);
+          errors += 1;
         });
 
       // restart the batch queue
@@ -58,13 +48,7 @@ async function main() {
   // Flush the remaining objects
   const response = await batcher.do();
   console.log(response);
-}
-
-async function getJsonData(): Promise<any> {
-  const file: Response = await fetch(
-    "https://raw.githubusercontent.com/weaviate-tutorials/quickstart/main/data/jeopardy_tiny.json"
-  );
-  return file.json();
+  console.log({ response: response.length, inserted, errors });
 }
 
 void main();

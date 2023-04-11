@@ -11,30 +11,17 @@ async function main() {
 
   const schemaRes = await client.schema.getter().do();
 
-  // console.log("here", schemaRes);
-  // const schemaConfig = {
-  //   class: "Products",
-  //   vectorizer: "text2vec-openai",
-  // };
+  console.log("here", schemaRes);
+  //   const schemaConfig = {
+  //     class: "Product",
+  //     vectorizer: "text2vec-openai",
+  //   };
 
-  // const response = await client.schema
-  //   .classCreator()
-  //   .withClass(schemaConfig)
-  //   .do();
-  // console.log("response", response);
-
-  // const img = readFileSync("./img/hi-mom.jpg");
-
-  // const b64 = Buffer.from(img).toString("base64");
-
-  // await client.data
-  //   .creator()
-  //   .withClassName("Meme")
-  //   .withProperties({
-  //     image: b64,
-  //     text: "matrix meme",
-  //   })
-  //   .do();
+  //   const response = await client.schema
+  //     .classCreator()
+  //     .withClass(schemaConfig)
+  //     .do();
+  //   console.log("response", response);
 }
 
 void main();

@@ -10,12 +10,14 @@ const client = weaviate.client({
 
 client.graphql
   .get()
-  .withClassName("Question")
-  .withFields("question answer category _additional { id distance }")
-  .withLimit(2)
+  .withClassName("Product")
+  .withFields("category description segments supplier")
+  .withNearText({ concepts: ["ovos"] })
+  .withLimit(10)
   .do()
   .then((res: any) => {
-    console.dir(res.data.Get.Question, { depth: 100 });
+    console.log("good", res);
+    console.dir(res.data.Get.Product, { depth: 100 });
   })
   .catch((err: Error) => {
     console.error("bad", err);

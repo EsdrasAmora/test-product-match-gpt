@@ -1,10 +1,9 @@
 import fs from "fs";
+import data from "./old_data.json";
 
-const result = JSON.parse(
-  fs.readFileSync(__dirname + "/products_data.json").toString()
-).map((item: any) => {
+const result = data.map((item: any) => {
   return {
-    id: item.c0,
+    productId: item.c0,
     category: item.c1,
     description: item.c2,
     supplier: item.c3,
