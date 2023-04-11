@@ -1,24 +1,16 @@
-import weaviate, { WeaviateClient } from "weaviate-ts-client";
-import dotenv from "dotenv";
-
-dotenv.config();
-const client = weaviate.client({
-  scheme: "http",
-  host: "localhost:8080",
-  headers: { "X-OpenAI-Api-Key": process.env.OPENAI_APIKEY! },
-});
+import { client } from "./client";
 
 client.graphql
   .get()
   .withClassName("Product")
-  .withFields("category description segments supplier _additional { distance }")
-  .withLimit(10)
+  .withFields("category description supplier _additional { distance }")
+  .withNearText({ concepts: ["peixe"] })
+  .withLimit(2)
   .do()
   .then((res: any) => {
     console.log("good", res);
     console.dir(res.data.Get.Product, { depth: 100 });
   });
-
 // client.graphql
 //   .aggregate()
 //   .withClassName("Product")
@@ -26,5 +18,5 @@ client.graphql
 //   .do()
 //   .then((res: any) => {
 //     console.log("good", res);
-//     console.dir(res.data.Get.Product, { depth: 100 });
+//     console.dir(res.data.Aggregate.Product, { depth: 100 });
 //   });
